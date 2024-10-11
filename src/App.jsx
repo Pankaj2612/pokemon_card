@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import PokeDexCard from "./components/PokeDexCard";
 import Input from "./components/Input";
+import Loader from "./components/Loader";
 
 function App() {
   const [pokemon_Data, setPokemon_Data] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setloading] = useState(true);
   const colors = {
     fire: "#FDDFDF",
     grass: "#DEFDE0",
@@ -50,7 +52,7 @@ function App() {
       }
 
       setPokemon_Data(fetchedPokemons);
-      console.log("useEffect");
+      setloading(false);
     };
 
     fetchdata();
@@ -78,17 +80,25 @@ function App() {
             src="https://fontmeme.com/permalink/241011/67796174957ec6b81cacf85609a93786.png"
             alt="PokeDex"
           />
-         
         </div>
         <div className="m-2 p-2">
           <Input onChange={handleSearch} value={searchTerm} />
         </div>
       </div>
-      <div className="grid sm:grid-cols-5 gap-0 grid-cols-2 items-center justify-center m-0">
-        {filteredPokemon.map((pokemonDetails) => (
-          <PokeDexCard key={pokemonDetails.id} pokemon_data={pokemonDetails} />
-        ))}
-      </div>
+      {loading ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <Loader />
+        </div>
+      ) : (
+        <div className="grid sm:grid-cols-5 gap-0 grid-cols-2 items-center justify-center m-0">
+          {filteredPokemon.map((pokemonDetails) => (
+            <PokeDexCard
+              key={pokemonDetails.id}
+              pokemon_data={pokemonDetails}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 }
